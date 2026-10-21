@@ -13,8 +13,12 @@ export default function Home() {
     fetch('https://phimapi.com/danh-sach/phim-moi-cap-nhat?page=1')
       .then(res => res.json())
       .then(data => {
-        if (data.items) setMovies(data.items);
-        if (data.pathImage) setPathImage(data.pathImage);
+        if (data && data.items) {
+          setMovies(data.items);
+        }
+        if (data && data.pathImage) {
+          setPathImage(data.pathImage);
+        }
         setLoading(false);
       })
       .catch(error => {
@@ -37,25 +41,27 @@ export default function Home() {
         <div className="text-center text-rose-500 py-10">Máy chủ phim đang bảo trì, vui lòng thử lại sau!</div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-          {movies.map((movie) => {
-            const thumbUrl = movie.thumb_url.startsWith('http') ? movie.thumb_url : pathImage + movie.thumb_url;
+          {movies.map((movie, index) => {
+            // Cấu trúc an toàn chống crash nếu thiếu link ảnh
+            const thumb = movie?.thumb_url || '';
+            const thumbUrl = thumb.startsWith('http') ? thumb : pathImage + thumb;
             
             return (
-              <Link href={`/phim/${movie.slug}`} key={movie._id}>
+              <Link href={`/phim/${movie?.slug || ''}`} key={movie?._id || index}>
                 <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:ring-2 hover:ring-rose-500 transition cursor-pointer h-full flex flex-col">
                   <div className="relative aspect-[2/3] w-full">
                     <img 
                       src={thumbUrl} 
-                      alt={movie.name} 
+                      alt={movie?.name || 'Phim mới'} 
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute top-2 left-2 bg-rose-600 text-xs font-bold px-2 py-1 rounded">
-                      {movie.year || '2024'}
+                      {movie?.year || '2024'}
                     </div>
                   </div>
                   <div className="p-3 flex-grow">
-                    <h3 className="font-bold text-sm text-gray-100 line-clamp-1">{movie.name}</h3>
-                    <p className="text-xs text-gray-400 mt-1 line-clamp-1">{movie.origin_name}</p>
+                    <h3 className="font-bold text-sm text-gray-100 line-clamp-1">{movie?.name || 'Đang cập nhật'}</h3>
+                    <p className="text-xs text-gray-400 mt-1 line-clamp-1">{movie?.origin_name || ''}</p>
                   </div>
                 </div>
               </Link>
