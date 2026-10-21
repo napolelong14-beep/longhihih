@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -9,7 +10,6 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Đổi sang nguồn API của KKPhim (hoạt động cực kỳ ổn định, không bị chặn)
     fetch('https://phimapi.com/danh-sach/phim-moi-cap-nhat?page=1')
       .then(res => res.json())
       .then(data => {
@@ -44,7 +44,6 @@ export default function Home() {
               <Link href={`/phim/${movie.slug}`} key={movie._id}>
                 <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:ring-2 hover:ring-rose-500 transition cursor-pointer h-full flex flex-col">
                   <div className="relative aspect-[2/3] w-full">
-                    {/* Sử dụng thẻ img tiêu chuẩn thay cho Image của Nextjs để tránh lỗi cấu hình domain */}
                     <img 
                       src={thumbUrl} 
                       alt={movie.name} 
@@ -63,10 +62,6 @@ export default function Home() {
             );
           })}
         </div>
-      )}
-    </div>
-  );
-}
       )}
     </div>
   );
