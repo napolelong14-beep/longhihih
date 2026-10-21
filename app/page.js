@@ -2,16 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 
 export default function Home() {
   const [movies, setMovies] = useState([]);
-  const [pathImage, setPathImage] = useState('https://img.ophim.live/uploads/movies/');
+  const [pathImage, setPathImage] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Trình duyệt của người dùng sẽ tự động gọi API này khi mở web
-    fetch('https://ophim1.com/danh-sach/phim-moi-cap-nhat?page=1')
+    // Đổi sang nguồn API của KKPhim (hoạt động cực kỳ ổn định, không bị chặn)
+    fetch('https://phimapi.com/danh-sach/phim-moi-cap-nhat?page=1')
       .then(res => res.json())
       .then(data => {
         if (data.items) setMovies(data.items);
@@ -45,12 +44,11 @@ export default function Home() {
               <Link href={`/phim/${movie.slug}`} key={movie._id}>
                 <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:ring-2 hover:ring-rose-500 transition cursor-pointer h-full flex flex-col">
                   <div className="relative aspect-[2/3] w-full">
-                    <Image 
+                    {/* Sử dụng thẻ img tiêu chuẩn thay cho Image của Nextjs để tránh lỗi cấu hình domain */}
+                    <img 
                       src={thumbUrl} 
                       alt={movie.name} 
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
+                      className="w-full h-full object-cover"
                     />
                     <div className="absolute top-2 left-2 bg-rose-600 text-xs font-bold px-2 py-1 rounded">
                       {movie.year || '2024'}
@@ -65,6 +63,10 @@ export default function Home() {
             );
           })}
         </div>
+      )}
+    </div>
+  );
+}
       )}
     </div>
   );
